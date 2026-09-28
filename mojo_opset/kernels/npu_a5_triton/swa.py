@@ -8,6 +8,9 @@ import triton.language as tl
 
 from mojo_opset.kernels._npu_triton_utils import get_num_cores
 from mojo_opset.kernels._npu_triton_utils import is_910
+from mojo_opset.utils._exports import additions
+
+_private = additions(__package__)
 
 AUX_MASK_SIZE = 256
 AUX_MASK = None
@@ -2192,7 +2195,10 @@ def _swa_bwd_dkdv_kernel(
 
 @triton.autotune(
     configs=[
-        triton.Config({"BLOCK_M": 128, "BLOCK_N": 128, "multibuffer": True}),
+        triton.Config({"BLOCK_M": 128, "BLOCK_N": 128, "multibuffer": True,
+                       "enable_dynamic_cv_pipeline": (
+                           False if _private is not None and _private.disable_swa_dq_dynamic_cv_pipeline() else True
+                       )}),
     ],
     key=["HEAD_DIM"],
 )
