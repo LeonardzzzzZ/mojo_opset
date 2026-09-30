@@ -69,6 +69,7 @@ test_configs_decode = [
     (8, 8, 1, 128, 8192, 1024, torch.bfloat16, "M_BF16_LONG"),
     (8, 8, 1, 128, 2048, 1024, torch.bfloat16, "M_BF16_BIGPAGE"),
     (8, 8, 1, 128, 0, 1024, torch.bfloat16, "M_BF16_PADSEQ"),
+    (8, 8, 1, 128, 4096, 1024, torch.bfloat16, "M_BF16_4096"),
     (8, 8, 1, 128, 16384, 128, torch.bfloat16, "M_BF16_LONG_16384"),
     (8, 8, 1, 128, 32768, 128, torch.bfloat16, "M_BF16_LONG_32768"),
 ]
@@ -339,10 +340,15 @@ test_configs_prefill = [
     (2, 8, 1, 128, 4096, 8192, 128, torch.bfloat16, "M_BF16_WITH_CACHE"),
     (2, 8, 1, 128, 1024, 2048, 1024, torch.bfloat16, "M_BF16_BIGPAGE"),
     (2, 8, 1, 128, 0, 0, 1024, torch.bfloat16, "M_BF16_PADSEQ"),
-
     (2, 8, 1, 128, 16384, 8192, 128, torch.bfloat16, "M_BF16_WITH_CACHE_16384"),
     (2, 8, 1, 128, 32768, 10240, 128, torch.bfloat16, "M_BF16_WITH_CACHE_32768"),
-    (1, 12, 4, 128, 131072, 0, 128, torch.bfloat16, "M_BF16_128K_FULL")
+    (1, 12, 4, 128, 131072, 0, 128, torch.bfloat16, "M_BF16_128K_FULL"),
+    (2, 16, 4, 128,  32768, 0, 32, torch.bfloat16, "M_BF16-1"),
+    (2, 16, 4, 128, 8192, 0, 32, torch.bfloat16, "M_BF16-2"),
+    (2, 16, 4, 128, 1024, 0, 32, torch.bfloat16, "M_BF16-3"),
+    (2, 8, 1, 128,  8192, 0, 128, torch.bfloat16, "M_BF16-4"),
+    (2, 8, 1, 128, 32768, 10240, 128, torch.bfloat16, "M_BF16-5"),
+    (2, 8, 1, 128, 16384, 8192, 128, torch.bfloat16, "M_BF16-6")
 ]
 @pytest.mark.parametrize(
     "query, k_cache, v_cache, cu_q_lens, block_tables, cu_total_seq_lens",
@@ -473,6 +479,12 @@ def test_sdpa(
 
 test_configs_swa_prefill = [
     (2, 16, 4, 128, 1024, 0, 32, torch.bfloat16, "M_BF16"),
+    (2, 16, 4, 128, 65535, 0, 32, torch.bfloat16, "M_BF16_1"),
+    (2, 16, 4, 128, 4096, 0, 32, torch.bfloat16, "M_BF16_2"),
+    (2, 16, 4, 128, 512, 0, 32, torch.bfloat16, "M_BF16_3"),
+    (2, 16, 4, 128, 2048, 0, 128, torch.bfloat16, "M_BF16_4"),
+    (2, 8, 1, 128, 16348, 1024, 128, torch.bfloat16, "M_BF16_5"),
+    (2, 8, 1, 128, 32768, 1024, 128, torch.bfloat16, "M_BF16_6"),
     (2, 16, 4, 128, 2048, 0, 128, torch.bfloat16, "M_BF16_PADDIM"),
     (2, 8, 1, 128, 256, 1024, 128, torch.bfloat16, "M_BF16_WITH_CACHE"),
     (2, 8, 1, 128, 1024, 2048, 1024, torch.bfloat16, "M_BF16_BIGPAGE"),
