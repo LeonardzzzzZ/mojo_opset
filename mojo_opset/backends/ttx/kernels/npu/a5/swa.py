@@ -1800,11 +1800,11 @@ def swa_fwd_impl(
 @triton.autotune(
     configs=[
         triton.Config(kwargs={"BLOCK_SIZE": 32}),
-        triton.Config(kwargs={"BLOCK_SIZE": 64}),
-        triton.Config(kwargs={"BLOCK_SIZE": 128}),
-        triton.Config(kwargs={"BLOCK_SIZE": 256}),
-        triton.Config(kwargs={"BLOCK_SIZE": 512}),
-        triton.Config(kwargs={"BLOCK_SIZE": 1024}),
+        # triton.Config(kwargs={"BLOCK_SIZE": 64}),
+        # triton.Config(kwargs={"BLOCK_SIZE": 128}),
+        # triton.Config(kwargs={"BLOCK_SIZE": 256}),
+        # triton.Config(kwargs={"BLOCK_SIZE": 512}),
+        # triton.Config(kwargs={"BLOCK_SIZE": 1024}),
     ],
     key=["HEAD_DIM"],
 )
@@ -1969,9 +1969,9 @@ def _sdpa_single_block_bwd_dq(
 @triton.autotune(
     configs=[
         triton.Config({"BLOCK_M": BM, "BLOCK_N": BN, "multibuffer": MF})
-        for BM in ([128] if not is_910() else [64, 128])
-        for BN in [64, 128]
-        for MF in [False, True]
+        for BM in ([128] if not is_910() else [64])
+        for BN in [64]
+        for MF in [True]
     ],
     key=["HEAD_DIM"],
 )
@@ -2257,9 +2257,9 @@ def _swa_bwd_dkdv_kernel(
 @triton.autotune(
     configs=[
         triton.Config({"BLOCK_M": BM, "BLOCK_N": BN, "multibuffer": MF})
-        for BM in [64, 128]
-        for BN in [64, 128]
-        for MF in [True, False]
+        for BM in [64]
+        for BN in [64]
+        for MF in [False]
     ],
     key=["HEAD_DIM"],
 )
